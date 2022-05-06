@@ -2,13 +2,20 @@ import requests
 from time import sleep, time
 
 
+DATA_OUTFILE = 'data.csv'
+
+
 def timer_func(func):
     # This function shows the execution time of the function object passed
     def wrap_func(*args, **kwargs):
         t1 = time()
         result = func(*args, **kwargs)
         t2 = time()
-        print(f'Function{func.__name__!r} executed in {((t2 - t1)*1000):.2f}ms')
+        ms = (t2 - t1) * 1000
+        print(f'Function{func.__name__!r} executed in {ms:.2f}ms')
+        f = open(DATA_OUTFILE, 'a')
+        f.write(f'{ms:.2f}\n')
+        f.close()
 
     return wrap_func
 
