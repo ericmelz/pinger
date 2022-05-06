@@ -1,0 +1,2 @@
+# pinger
+pingdom-like service
