@@ -2,8 +2,15 @@ import requests
 from time import sleep, time
 
 
+URL = 'http://verity-edge.lax.k8s.sx.ggops.com/xandr/page/classify?url=https://trilltrill.jp/articles/2247759'
+#DATA_OUTFILE = 'data_one_sec.csv'
+#DATA_OUTFILE = 'data_one_min.csv'
 DATA_OUTFILE = 'data.csv'
-
+#SLEEP_TIME = .1  # ten pings per second
+SLEEP_TIME = 1  # one ping per second
+#SLEEP_TIME = 10  # one ping every 10 seconds
+#SLEEP_TIME = 60  # one ping per minute
+PING_CUTOFF = 100000  # so we don't run forever and great a ginormous file
 
 def timer_func(func):
     # This function shows the execution time of the function object passed
@@ -12,9 +19,9 @@ def timer_func(func):
         result = func(*args, **kwargs)
         t2 = time()
         ms = (t2 - t1) * 1000
-        print(f'Function{func.__name__!r} executed in {ms:.2f}ms')
+        print(f'{int(t2)}: {ms:.2f}ms')
         f = open(DATA_OUTFILE, 'a')
-        f.write(f'{ms:.2f}\n')
+        f.write(f'{int(t2)},{ms:.2f}\n')
         f.close()
 
     return wrap_func
@@ -22,13 +29,13 @@ def timer_func(func):
 
 @timer_func
 def ping():
-    r = requests.get('http://52.53.207.225/')
+    r = requests.get(URL)
 
 
 def pings():
-    for _ in range(10):
+    for _ in range(PING_CUTOFF):
         ping()
-        sleep(1)
+        sleep(SLEEP_TIME)
 
 
 if __name__ == '__main__':
